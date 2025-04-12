@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="utf8" collation="utf8_general_ci">empresafinal</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name=" productos_por_inventario" view="colnames">
+<left>432</left>
+<top>203</top>
+<width>245</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE ` productos_por_inventario` (
+  `IDPRODUCTOS_PRO_INVENTARIO` int(11) NOT NULL AUTO_INCREMENT,
+  `CANTIDAD_PRODUCTO` varchar(45) NOT NULL,
+  `PRODUCTO_idPRODUCTO` int(11) NOT NULL,
+  `INVENTARIO_idINVENTARIO` int(11) NOT NULL,
+  PRIMARY KEY (`IDPRODUCTOS_PRO_INVENTARIO`),
+  KEY `PRODUCTO_idPRODUCTO` (`PRODUCTO_idPRODUCTO`),
+  KEY `INVENTARIO_idINVENTARIO` (`INVENTARIO_idINVENTARIO`),
+  CONSTRAINT ` productos_por_inventario_ibfk_1` FOREIGN KEY (`PRODUCTO_idPRODUCTO`) REFERENCES `producto` (`idPRODUCTO`),
+  CONSTRAINT ` productos_por_inventario_ibfk_2` FOREIGN KEY (`INVENTARIO_idINVENTARIO`) REFERENCES `inventario` (`idINVENTARIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="compras" view="colnames">
+<left>792</left>
+<top>45</top>
+<width>272</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `compras` (
+  `idCOMPRAS` int(11) NOT NULL AUTO_INCREMENT,
+  `FECHA_COMPRA` date NOT NULL,
+  `VALOR_TOTAL` decimal(10,0) NOT NULL,
+  `PROVEEDOR_idPROVEEDOR` int(11) NOT NULL,
+  `PRODUCTO_idPRODUCTO` int(11) NOT NULL,
+  PRIMARY KEY (`idCOMPRAS`),
+  KEY `PRODUCTO_idPRODUCTO` (`PRODUCTO_idPRODUCTO`),
+  KEY `PROVEEDOR_idPROVEEDOR` (`PROVEEDOR_idPROVEEDOR`),
+  CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`PRODUCTO_idPRODUCTO`) REFERENCES `producto` (`idPRODUCTO`),
+  CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`PROVEEDOR_idPROVEEDOR`) REFERENCES `proveedor` (`idPROVEEDOR`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="detalle_ventas" view="colnames">
+<left>742</left>
+<top>260</top>
+<width>195</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `detalle_ventas` (
+  `iddetalle_ventas` int(11) NOT NULL AUTO_INCREMENT,
+  `CANTIDAD_PRODUCTO` decimal(10,0) NOT NULL,
+  `VALOR_PRODUCTO` decimal(10,0) NOT NULL,
+  `VALOR_FINAL` decimal(10,0) NOT NULL,
+  `PRODUCTO_idPRODUCTO` int(11) NOT NULL,
+  PRIMARY KEY (`iddetalle_ventas`),
+  KEY `PRODUCTO_idPRODUCTO` (`PRODUCTO_idPRODUCTO`),
+  CONSTRAINT `detalle_ventas_ibfk_1` FOREIGN KEY (`PRODUCTO_idPRODUCTO`) REFERENCES `producto` (`idPRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="factura" view="colnames">
+<left>651</left>
+<top>489</top>
+<width>229</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `factura` (
+  `idFACTURA` int(11) NOT NULL AUTO_INCREMENT,
+  `FECHA` datetime NOT NULL,
+  `TOTAL_VENTA` decimal(10,0) NOT NULL,
+  `USUARIO_idUSUARIO` int(11) NOT NULL,
+  `detalle_ventas_iddetalle_ventas` int(11) NOT NULL,
+  PRIMARY KEY (`idFACTURA`),
+  KEY `detalle_ventas_iddetalle_ventas` (`detalle_ventas_iddetalle_ventas`),
+  KEY `USUARIO_idUSUARIO` (`USUARIO_idUSUARIO`),
+  CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`detalle_ventas_iddetalle_ventas`) REFERENCES `detalle_ventas` (`iddetalle_ventas`),
+  CONSTRAINT `factura_ibfk_2` FOREIGN KEY (`USUARIO_idUSUARIO`) REFERENCES `usuario` (`idUSUARIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="inventario" view="colnames">
+<left>145</left>
+<top>343</top>
+<width>263</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `inventario` (
+  `idINVENTARIO` int(11) NOT NULL AUTO_INCREMENT,
+  `FECHA_ENTRADA` datetime NOT NULL,
+  `FECHA_SALIDA` datetime NOT NULL,
+  `STOCK_INVENTARIO` varchar(100) NOT NULL,
+  `ESTADO_PRODUCTOS_INVENTARIOS` enum('ACTIVO','INACTIVO') NOT NULL,
+  PRIMARY KEY (`idINVENTARIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="producto" view="colnames">
+<left>516</left>
+<top>15</top>
+<width>203</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `producto` (
+  `idPRODUCTO` int(11) NOT NULL AUTO_INCREMENT,
+  `CODIGO_PRODUCTO` varchar(45) NOT NULL,
+  `NOMBRE_PRODUCTO` varchar(45) NOT NULL,
+  `PRECIO_VALOR` varchar(45) NOT NULL,
+  `PRECIO_TOTAL` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`idPRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="proveedor" view="colnames">
+<left>1076</left>
+<top>244</top>
+<width>194</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `proveedor` (
+  `idPROVEEDOR` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE_PROVEEDOR` varchar(45) NOT NULL,
+  `DIRECCION_PROVEEDOR` varchar(120) NOT NULL,
+  `TELEFONO_PROVEEDOR` varchar(120) NOT NULL,
+  `CORREO_PROVEEDOR` varchar(45) NOT NULL,
+  PRIMARY KEY (`idPROVEEDOR`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="rol" view="colnames">
+<left>273</left>
+<top>33</top>
+<width>150</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `rol` (
+  `ROLES_ID_ROLES` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE_ROL` varchar(45) NOT NULL,
+  PRIMARY KEY (`ROLES_ID_ROLES`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+<table name="usuario" view="colnames">
+<left>7</left>
+<top>49</top>
+<width>191</width>
+<height>214</height>
+<sql_create_table>CREATE TABLE `usuario` (
+  `idUSUARIO` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE_USUARIO` varchar(120) NOT NULL,
+  `TIPODOC_USUARIOS` enum('CC','TI','PPT') NOT NULL,
+  `NUMERODOC_USUARIOS` varchar(20) NOT NULL,
+  `TELEFONO_USUARIOS` varchar(120) NOT NULL,
+  `CORREO_USUARIOS` varchar(100) NOT NULL,
+  `CONTRASEÑA_ROLES` varchar(100) NOT NULL,
+  `ROL_ROLES_ID_ROLES` int(11) NOT NULL,
+  PRIMARY KEY (`idUSUARIO`),
+  KEY `ROL_ROLES_ID_ROLES` (`ROL_ROLES_ID_ROLES`),
+  CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`ROL_ROLES_ID_ROLES`) REFERENCES `rol` (`ROLES_ID_ROLES`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
